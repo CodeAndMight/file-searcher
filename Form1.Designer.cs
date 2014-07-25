@@ -102,6 +102,7 @@
             this.actionButton.TabIndex = 6;
             this.actionButton.Text = "Найти";
             this.actionButton.UseVisualStyleBackColor = true;
+            this.actionButton.Click += new System.EventHandler(this.actionButton_Click);
             // 
             // fileTreeView
             // 
