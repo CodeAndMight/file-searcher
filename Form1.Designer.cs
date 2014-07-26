@@ -43,6 +43,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.currentFileLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +61,7 @@
             // 
             this.starterDirTextBox.Location = new System.Drawing.Point(16, 30);
             this.starterDirTextBox.Name = "starterDirTextBox";
-            this.starterDirTextBox.Size = new System.Drawing.Size(225, 20);
+            this.starterDirTextBox.Size = new System.Drawing.Size(193, 20);
             this.starterDirTextBox.TabIndex = 1;
             // 
             // label2
@@ -180,11 +182,22 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Текущий файл:";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(215, 30);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(25, 20);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "...";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 442);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.fileTreeView);
             this.Controls.Add(this.actionButton);
@@ -224,6 +237,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label currentFileLabel;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 

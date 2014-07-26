@@ -28,6 +28,12 @@ namespace FileSearcher
         {
             TotalFiles = 0;
 
+            if (!Directory.Exists(this.FolderName))
+            {
+                if (FinishedSearchDelegate != null) FinishedSearchDelegate();
+                return;
+            }
+
             var fileString = Directory.EnumerateFiles(this.FolderName, this.FilePattern, SearchOption.AllDirectories);
 
             foreach (string file in fileString)

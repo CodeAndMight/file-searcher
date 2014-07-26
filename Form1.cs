@@ -170,5 +170,17 @@ namespace FileSearcher
                 reader.Close();
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DialogResult result = folderBrowserDialog1.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string folderName = folderBrowserDialog1.SelectedPath;
+
+                this.starterDirTextBox.Text = folderName;
+            }
+        }
     }
 }
