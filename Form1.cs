@@ -158,7 +158,7 @@ namespace FileSearcher
         /// <param name="e"></param>
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.currentThread.IsAlive)
+            if (this.currentThread != null && this.currentThread.IsAlive)
             {
                 this.currentThread.Abort();
                 this.currentThread.Join();
