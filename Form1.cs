@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
+using System.Timers;
 
 namespace FileSearcher
 {
@@ -15,20 +17,48 @@ namespace FileSearcher
     {
         private Searcher searcher;
         private Thread currentThread;
-
-        delegate void AddNodeCallback(string text);
+        private bool isSearching;
+        private System.Timers.Timer timer;
+        private DateTime now;
 
         public Form1()
         {
             InitializeComponent();
 
-            searcher = new Searcher();
+            isSearching = false;
 
+            searcher = new Searcher();
             searcher.FindedFileDelegate = new FindedFile(actionFindedFile);
+            searcher.FinishedSearchDelegate = new FinishedSearch(finishedSearch);
+
+            timer = new System.Timers.Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += new ElapsedEventHandler(DisplayTimeEvent);
+
+        }
+
+        public void DisplayTimeEvent(object source, ElapsedEventArgs e)
+        {
+            this.remainTimeLabel.BeginInvoke(new MethodInvoker(delegate()
+            {
+                this.remainTimeLabel.Text = (e.SignalTime - this.now).TotalSeconds.ToString();
+            }));
         }
 
         private void actionButton_Click(object sender, EventArgs e)
         {
+            if (isSearching)
+            {
+                currentThread.Abort();
+                this.finishedSearch();
+                return;
+            }
+
+            now = DateTime.Now;
+            timer.Start();
+            isSearching = true;
+            this.actionButton.Text = "Остановить";
+
             fileTreeView.Nodes.Clear();
 
             searcher.FolderName = this.starterDirTextBox.Text;
@@ -39,23 +69,87 @@ namespace FileSearcher
             this.currentThread.Start();
         }
 
-        public void actionFindedFile(string fileName)
+        public void finishedSearch()
         {
-            this.addNode(fileName);
+            this.BeginInvoke(new MethodInvoker(delegate()
+            {
+                isSearching = false;
+                this.actionButton.Text = "Найти";
+                timer.Stop();
+            }));            
         }
 
-        private void addNode(string fileName)
+        public void actionFindedFile(string fileName)
         {
-            if (this.fileTreeView.InvokeRequired)
+            this.fileTreeView.BeginInvoke(new MethodInvoker(delegate()
             {
-                AddNodeCallback d = new AddNodeCallback(addNode);
-                this.Invoke(d, new object[] { fileName });
-            }
-            else
-            {                
+                string[] filePath = fileName.Split(new char[] { '\\' });
+
                 fileTreeView.BeginUpdate();
-                fileTreeView.Nodes.Add(fileName);
+
+                TreeNodeCollection currentNode = fileTreeView.Nodes;
+                TreeNode[] nodes = null;
+
+                foreach (string path in filePath)
+                {
+                    nodes = currentNode.Find(path, false);
+                    if (nodes.Length > 0)
+                    {
+                        currentNode = nodes[0].Nodes;
+                    }
+                    else
+                    {
+                        TreeNode node = currentNode.Add(path, path);
+                        currentNode = node.Nodes;
+                    }
+                }
+                
                 fileTreeView.EndUpdate();
+            }));
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.currentThread.IsAlive)
+            {
+                this.currentThread.Abort();
+                this.currentThread.Join();
+            }
+
+            StreamWriter writer = new StreamWriter("FormSettings.txt");
+
+            writer.WriteLine(this.starterDirTextBox.Text);
+            writer.WriteLine(this.filePatternTextBox.Text);
+            writer.WriteLine(this.searcherTextBox.Text);
+
+            writer.Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (File.Exists("FormSettings.txt"))
+            {
+                StreamReader reader = new StreamReader("FormSettings.txt");
+
+                string buf = reader.ReadLine();
+                if (buf != null)
+                {
+                    this.starterDirTextBox.Text = buf;
+                }
+
+                buf = reader.ReadLine();
+                if (buf != null)
+                {
+                    this.filePatternTextBox.Text = buf;
+                }
+
+                buf = reader.ReadLine();
+                if (buf != null)
+                {
+                    this.searcherTextBox.Text = buf;
+                }
+
+                reader.Close();
             }
         }
     }

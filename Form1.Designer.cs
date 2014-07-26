@@ -37,12 +37,12 @@
             this.actionButton = new System.Windows.Forms.Button();
             this.fileTreeView = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.currentFileLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.fileAmountLabel = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.remainTimeLabel = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.fileAmountLabel = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.currentFileLabel = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,41 +126,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Информация";
             // 
-            // label4
+            // remainTimeLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Текущий файл:";
-            // 
-            // currentFileLabel
-            // 
-            this.currentFileLabel.AutoSize = true;
-            this.currentFileLabel.Location = new System.Drawing.Point(98, 20);
-            this.currentFileLabel.Name = "currentFileLabel";
-            this.currentFileLabel.Size = new System.Drawing.Size(27, 13);
-            this.currentFileLabel.TabIndex = 1;
-            this.currentFileLabel.Text = "N/A";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 42);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(185, 13);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Количество обработанных файлов:";
-            // 
-            // fileAmountLabel
-            // 
-            this.fileAmountLabel.AutoSize = true;
-            this.fileAmountLabel.Location = new System.Drawing.Point(198, 42);
-            this.fileAmountLabel.Name = "fileAmountLabel";
-            this.fileAmountLabel.Size = new System.Drawing.Size(27, 13);
-            this.fileAmountLabel.TabIndex = 3;
-            this.fileAmountLabel.Text = "N/A";
+            this.remainTimeLabel.AutoSize = true;
+            this.remainTimeLabel.Location = new System.Drawing.Point(110, 63);
+            this.remainTimeLabel.Name = "remainTimeLabel";
+            this.remainTimeLabel.Size = new System.Drawing.Size(27, 13);
+            this.remainTimeLabel.TabIndex = 5;
+            this.remainTimeLabel.Text = "N/A";
             // 
             // label8
             // 
@@ -171,14 +144,41 @@
             this.label8.TabIndex = 4;
             this.label8.Text = "Прошло времени:";
             // 
-            // remainTimeLabel
+            // fileAmountLabel
             // 
-            this.remainTimeLabel.AutoSize = true;
-            this.remainTimeLabel.Location = new System.Drawing.Point(110, 63);
-            this.remainTimeLabel.Name = "remainTimeLabel";
-            this.remainTimeLabel.Size = new System.Drawing.Size(27, 13);
-            this.remainTimeLabel.TabIndex = 5;
-            this.remainTimeLabel.Text = "N/A";
+            this.fileAmountLabel.AutoSize = true;
+            this.fileAmountLabel.Location = new System.Drawing.Point(198, 42);
+            this.fileAmountLabel.Name = "fileAmountLabel";
+            this.fileAmountLabel.Size = new System.Drawing.Size(27, 13);
+            this.fileAmountLabel.TabIndex = 3;
+            this.fileAmountLabel.Text = "N/A";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 42);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(185, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Количество обработанных файлов:";
+            // 
+            // currentFileLabel
+            // 
+            this.currentFileLabel.AutoSize = true;
+            this.currentFileLabel.Location = new System.Drawing.Point(98, 20);
+            this.currentFileLabel.Name = "currentFileLabel";
+            this.currentFileLabel.Size = new System.Drawing.Size(27, 13);
+            this.currentFileLabel.TabIndex = 1;
+            this.currentFileLabel.Text = "N/A";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(84, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Текущий файл:";
             // 
             // Form1
             // 
@@ -198,6 +198,8 @@
             this.MaximumSize = new System.Drawing.Size(640, 480);
             this.Name = "Form1";
             this.Text = "File Searcher";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
