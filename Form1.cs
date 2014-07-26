@@ -30,6 +30,7 @@ namespace FileSearcher
             searcher = new Searcher();
             searcher.FindedFileDelegate = new FindedFile(actionFindedFile);
             searcher.FinishedSearchDelegate = new FinishedSearch(finishedSearch);
+            searcher.TotalFilesInfoDelegate = new TotalFilesInfo(DisplayTotalFiles);
 
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
@@ -37,11 +38,19 @@ namespace FileSearcher
 
         }
 
+        public void DisplayTotalFiles(int total)
+        {
+            this.fileAmountLabel.BeginInvoke(new MethodInvoker(delegate()
+            {
+                this.fileAmountLabel.Text = total.ToString();
+            }));
+        }
+
         public void DisplayTimeEvent(object source, ElapsedEventArgs e)
         {
             this.remainTimeLabel.BeginInvoke(new MethodInvoker(delegate()
             {
-                this.remainTimeLabel.Text = (e.SignalTime - this.now).TotalSeconds.ToString();
+                this.remainTimeLabel.Text = Math.Floor((e.SignalTime - this.now).TotalSeconds).ToString();
             }));
         }
 
@@ -58,6 +67,7 @@ namespace FileSearcher
             timer.Start();
             isSearching = true;
             this.actionButton.Text = "Остановить";
+            this.remainTimeLabel.Text = "0";
 
             fileTreeView.Nodes.Clear();
 

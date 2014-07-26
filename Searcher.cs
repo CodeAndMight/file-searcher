@@ -9,6 +9,7 @@ namespace FileSearcher
 {
     public delegate void FindedFile(string fileName);
     public delegate void FinishedSearch();
+    public delegate void TotalFilesInfo(int total);
 
     class Searcher
     {
@@ -19,6 +20,7 @@ namespace FileSearcher
 
         public FindedFile FindedFileDelegate { get; set; }
         public FinishedSearch FinishedSearchDelegate { get; set; }
+        public TotalFilesInfo TotalFilesInfoDelegate { get; set; }
 
         public void Find()
         {
@@ -30,20 +32,22 @@ namespace FileSearcher
             {
                 using (StreamReader streamReader = new StreamReader(file))
                 {
+                    TotalFiles++;
                     while (streamReader.Peek() > -1)
                     {
                         string line = streamReader.ReadLine();
 
                         if (line.Contains(Text))
                         {
-                            FindedFileDelegate(file);
+                            if (FindedFileDelegate != null) FindedFileDelegate(file);
                             break;
                         }
                     }
+                    if (TotalFilesInfoDelegate != null) TotalFilesInfoDelegate(TotalFiles);
                 }
                     
             }
-            FinishedSearchDelegate();
+            if (FinishedSearchDelegate != null) FinishedSearchDelegate();
         }
     }
 }
