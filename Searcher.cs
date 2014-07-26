@@ -14,16 +14,19 @@ namespace FileSearcher
 
     class Searcher
     {
-        public string FolderName { get; set; }
-        public string FilePattern { get; set; }
-        public string Text { get; set; }
-        public int TotalFiles { get; set; }
+        public string FolderName { get; set; } // Директория для поиска
+        public string FilePattern { get; set; } // Шаблон для поиска файлов
+        public string Text { get; set; } // Искомый текст в файле
+        public int TotalFiles { get; set; } // Обработанное количество файлов
 
-        public FindedFile FindedFileDelegate { get; set; }
-        public FinishedSearch FinishedSearchDelegate { get; set; }
-        public TotalFilesInfo TotalFilesInfoDelegate { get; set; }
-        public CurrentFileProcess CurrentFileProcessDelegate { get; set; }
+        public FindedFile FindedFileDelegate { get; set; } // Сообщает о найденном файле
+        public FinishedSearch FinishedSearchDelegate { get; set; } // Сообщает о завершении работы поиска
+        public TotalFilesInfo TotalFilesInfoDelegate { get; set; } // Сообщает о текущем количестве файлов
+        public CurrentFileProcess CurrentFileProcessDelegate { get; set; } // Сообщает о файле
 
+        /// <summary>
+        /// Вызывается потоком для поиска подходящих файлов
+        /// </summary>
         public void Find()
         {
             TotalFiles = 0;

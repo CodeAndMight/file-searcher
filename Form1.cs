@@ -15,11 +15,11 @@ namespace FileSearcher
 {
     public partial class Form1 : Form
     {
-        private Searcher searcher;
-        private Thread currentThread;
-        private bool isSearching;
-        private System.Timers.Timer timer;
-        private DateTime now;
+        private Searcher searcher; // Вызывается потоком для поиска подходящих файлов
+        private Thread currentThread; // Запускающий поток
+        private bool isSearching; // Индикатор работы поиска
+        private System.Timers.Timer timer; // Отсчитывает прошедшее время
+        private DateTime now; // Старт поиска
 
         public Form1()
         {
@@ -38,6 +38,10 @@ namespace FileSearcher
             timer.Elapsed += new ElapsedEventHandler(DisplayTimeEvent);
         }
 
+        /// <summary>
+        /// Выводит текущий файл
+        /// </summary>
+        /// <param name="fileName"></param>
         public void DisplayCurrentFileLabel(string fileName)
         {
             this.currentFileLabel.BeginInvoke(new MethodInvoker(delegate()
@@ -46,6 +50,10 @@ namespace FileSearcher
             }));
         }
 
+        /// <summary>
+        /// Выводит общее количество обработанных файлов
+        /// </summary>
+        /// <param name="total"></param>
         public void DisplayTotalFiles(int total)
         {
             this.fileAmountLabel.BeginInvoke(new MethodInvoker(delegate()
@@ -54,6 +62,11 @@ namespace FileSearcher
             }));
         }
 
+        /// <summary>
+        /// Выводит прошедшее время поиска
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         public void DisplayTimeEvent(object source, ElapsedEventArgs e)
         {
             this.remainTimeLabel.BeginInvoke(new MethodInvoker(delegate()
@@ -62,6 +75,11 @@ namespace FileSearcher
             }));
         }
 
+        /// <summary>
+        /// Запускает/Останавливает поиск
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void actionButton_Click(object sender, EventArgs e)
         {
             if (isSearching)
@@ -87,6 +105,9 @@ namespace FileSearcher
             this.currentThread.Start();
         }
 
+        /// <summary>
+        /// Завершающий этап поиска, остановка таймера, возврат полей интерфейса в исходное состояние
+        /// </summary>
         public void finishedSearch()
         {
             this.BeginInvoke(new MethodInvoker(delegate()
@@ -97,6 +118,10 @@ namespace FileSearcher
             }));            
         }
 
+        /// <summary>
+        /// Вызывается, когда найден подходящий файл. Добавляет имя файла в TreeView в соответствии с иерархией пути файла
+        /// </summary>
+        /// <param name="fileName"></param>
         public void actionFindedFile(string fileName)
         {
             this.fileTreeView.BeginInvoke(new MethodInvoker(delegate()
@@ -126,6 +151,11 @@ namespace FileSearcher
             }));
         }
 
+        /// <summary>
+        /// Сохраняет настройки, когда закрывается приложение
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.currentThread.IsAlive)
@@ -143,6 +173,11 @@ namespace FileSearcher
             writer.Close();
         }
 
+        /// <summary>
+        /// Загружает настройки с предыдущей сессии, если настройки ранее сохранялись
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
             if (File.Exists("FormSettings.txt"))
@@ -171,6 +206,11 @@ namespace FileSearcher
             }
         }
 
+        /// <summary>
+        /// Метод вызывает диалоговое окно с выбором начальной директории
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = folderBrowserDialog1.ShowDialog();
