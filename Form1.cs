@@ -31,11 +31,19 @@ namespace FileSearcher
             searcher.FindedFileDelegate = new FindedFile(actionFindedFile);
             searcher.FinishedSearchDelegate = new FinishedSearch(finishedSearch);
             searcher.TotalFilesInfoDelegate = new TotalFilesInfo(DisplayTotalFiles);
+            searcher.CurrentFileProcessDelegate = new CurrentFileProcess(DisplayCurrentFileLabel);
 
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
             timer.Elapsed += new ElapsedEventHandler(DisplayTimeEvent);
+        }
 
+        public void DisplayCurrentFileLabel(string fileName)
+        {
+            this.currentFileLabel.BeginInvoke(new MethodInvoker(delegate()
+            {
+                this.currentFileLabel.Text = fileName;
+            }));
         }
 
         public void DisplayTotalFiles(int total)

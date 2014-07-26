@@ -10,6 +10,7 @@ namespace FileSearcher
     public delegate void FindedFile(string fileName);
     public delegate void FinishedSearch();
     public delegate void TotalFilesInfo(int total);
+    public delegate void CurrentFileProcess(string fileName);
 
     class Searcher
     {
@@ -21,6 +22,7 @@ namespace FileSearcher
         public FindedFile FindedFileDelegate { get; set; }
         public FinishedSearch FinishedSearchDelegate { get; set; }
         public TotalFilesInfo TotalFilesInfoDelegate { get; set; }
+        public CurrentFileProcess CurrentFileProcessDelegate { get; set; }
 
         public void Find()
         {
@@ -30,6 +32,7 @@ namespace FileSearcher
 
             foreach (string file in fileString)
             {
+                if (CurrentFileProcessDelegate != null) CurrentFileProcessDelegate(file);
                 using (StreamReader streamReader = new StreamReader(file))
                 {
                     TotalFiles++;
