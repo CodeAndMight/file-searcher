@@ -37,9 +37,55 @@ namespace FileSearcher
                 return;
             }
 
-            var fileString = Directory.EnumerateFiles(this.FolderName, this.FilePattern, SearchOption.AllDirectories);
+            this.ProccessDir(this.FolderName);
 
-            foreach (string file in fileString)
+            if (FinishedSearchDelegate != null) FinishedSearchDelegate();
+        }
+
+        /// <summary>
+        /// Обходит все каталоги
+        /// </summary>
+        /// <param name="dirName"></param>
+        public void ProccessDir(string dirName)
+        {
+            string[] dirs = null;
+
+            try
+            {
+                dirs = Directory.GetDirectories(dirName);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return; // Ignore Sys Dirs
+            }
+
+            this.ProccessFiles(dirName);
+
+            foreach (string dir in dirs)
+            {
+                this.ProccessFiles(dir);
+                this.ProccessDir(dir);
+            }
+        }
+
+        /// <summary>
+        /// Обходит все файлы
+        /// </summary>
+        /// <param name="dirName"></param>
+        public void ProccessFiles(string dirName)
+        {
+            string[] files = null;            
+
+            try
+            {
+                files = Directory.GetFiles(dirName, this.FilePattern);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return; // Ignore Sys Files
+            }
+
+            foreach (string file in files)
             {
                 if (CurrentFileProcessDelegate != null) CurrentFileProcessDelegate(file);
                 using (StreamReader streamReader = new StreamReader(file))
@@ -57,9 +103,7 @@ namespace FileSearcher
                     }
                     if (TotalFilesInfoDelegate != null) TotalFilesInfoDelegate(TotalFiles);
                 }
-                    
             }
-            if (FinishedSearchDelegate != null) FinishedSearchDelegate();
         }
     }
 }
