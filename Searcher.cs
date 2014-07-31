@@ -56,10 +56,13 @@ namespace FileSearcher
             }
             catch (UnauthorizedAccessException ex)
             {
-                return; // Ignore Sys Dirs
+                // Ignore Sys Dirs
+                dirs = new string[0];
             }
 
             this.ProccessFiles(dirName);
+
+            if (dirs.Length == 0) return;
 
             foreach (string dir in dirs)
             {
@@ -74,7 +77,7 @@ namespace FileSearcher
         /// <param name="dirName"></param>
         public void ProccessFiles(string dirName)
         {
-            string[] files = null;            
+            string[] files = null;
 
             try
             {
@@ -82,8 +85,10 @@ namespace FileSearcher
             }
             catch (UnauthorizedAccessException ex)
             {
-                return; // Ignore Sys Files
+                // Ignore Sys Files
             }
+
+            if (files == null) return;
 
             foreach (string file in files)
             {
