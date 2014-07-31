@@ -124,31 +124,43 @@ namespace FileSearcher
         /// <param name="fileName"></param>
         public void actionFindedFile(string fileName)
         {
-            this.fileTreeView.BeginInvoke(new MethodInvoker(delegate()
+            if (this.fileTreeView.InvokeRequired)
             {
-                string[] filePath = fileName.Split(new char[] { '\\' });
-
-                fileTreeView.BeginUpdate();
-
-                TreeNodeCollection currentNode = fileTreeView.Nodes;
-                TreeNode[] nodes = null;
-
-                foreach (string path in filePath)
+                this.fileTreeView.Invoke((MethodInvoker)delegate()
                 {
-                    nodes = currentNode.Find(path, false);
-                    if (nodes.Length > 0)
-                    {
-                        currentNode = nodes[0].Nodes;
-                    }
-                    else
-                    {
-                        TreeNode node = currentNode.Add(path, path);
-                        currentNode = node.Nodes;
-                    }
+                    this.actionFindedFile(fileName);
+                });
+            }
+            else
+            {
+                this.AddItem(fileName);
+            }
+        }
+
+        public void AddItem(string fileName)
+        {            
+            string[] filePath = fileName.Split(new char[] { '\\' });
+
+            fileTreeView.BeginUpdate();
+
+            TreeNodeCollection currentNode = fileTreeView.Nodes;
+            TreeNode[] nodes = null;
+
+            foreach (string path in filePath)
+            {
+                nodes = currentNode.Find(path, false);
+                if (nodes.Length > 0)
+                {
+                    currentNode = nodes[0].Nodes;
                 }
-                
-                fileTreeView.EndUpdate();
-            }));
+                else
+                {
+                    TreeNode node = currentNode.Add(path, path);
+                    currentNode = node.Nodes;
+                }
+            }
+
+            fileTreeView.EndUpdate();
         }
 
         /// <summary>

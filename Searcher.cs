@@ -48,27 +48,21 @@ namespace FileSearcher
         /// <param name="dirName"></param>
         public void ProccessDir(string dirName)
         {
-            string[] dirs = null;
-
             try
             {
-                dirs = Directory.GetDirectories(dirName);
+                string[] dirs = Directory.GetDirectories(dirName);
+
+                foreach (string dir in dirs)
+                {
+                    this.ProccessFiles(dir);
+                    this.ProccessDir(dir);
+                }
             }
             catch (UnauthorizedAccessException ex)
             {
                 // Ignore Sys Dirs
-                dirs = new string[0];
             }
-
-            this.ProccessFiles(dirName);
-
-            if (dirs.Length == 0) return;
-
-            foreach (string dir in dirs)
-            {
-                this.ProccessFiles(dir);
-                this.ProccessDir(dir);
-            }
+            //Console.WriteLine("==============="+dirName);
         }
 
         /// <summary>
@@ -77,22 +71,24 @@ namespace FileSearcher
         /// <param name="dirName"></param>
         public void ProccessFiles(string dirName)
         {
-            string[] files = null;
-
             try
             {
-                files = Directory.GetFiles(dirName, this.FilePattern);
+                string[] files = Directory.GetFiles(dirName, this.FilePattern);
+
+                this.Lookup(files);
             }
             catch (UnauthorizedAccessException ex)
             {
                 // Ignore Sys Files
             }
+            //Console.WriteLine("++++++++++++++"+dirName);
+        }
 
-            if (files == null) return;
-
+        public void Lookup(string[] files)
+        {
             foreach (string file in files)
             {
-                if (CurrentFileProcessDelegate != null) CurrentFileProcessDelegate(file);
+                if (CurrentFileProcessDelegate != null) CurrentFileProcessDelegate((string)file.Clone());
                 using (StreamReader streamReader = new StreamReader(file))
                 {
                     TotalFiles++;
@@ -102,13 +98,14 @@ namespace FileSearcher
 
                         if (line.Contains(Text))
                         {
-                            if (FindedFileDelegate != null) FindedFileDelegate(file);
+                            if (FindedFileDelegate != null) FindedFileDelegate((string)file.Clone());
                             break;
                         }
                     }
                     if (TotalFilesInfoDelegate != null) TotalFilesInfoDelegate(TotalFiles);
                 }
             }
+            //Console.WriteLine("-----------------");
         }
     }
 }
